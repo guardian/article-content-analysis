@@ -74,7 +74,7 @@ Resources:
           Stack: !Ref Stack
           App: !Ref App
       Description: Lambda that returns article analysis
-      Handler: com.gu.articleEntityAnalaysis.Lambda::handler
+      Handler: com.gu.articleEntityAnalysis.Lambda::handler
       MemorySize: 512
       Role: !GetAtt ExecutionRole.Arn
       Runtime: java8

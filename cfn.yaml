@@ -1,0 +1,145 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Get
+
+Parameters:
+  Stack:
+    Description: Stack name
+    Type: String
+    Default: playground
+  App:
+    Description: Application name
+    Type: String
+    Default: jr-test
+  Stage:
+    Description: Stage name
+    Type: String
+    AllowedValues:
+      - CODE
+      - PROD
+    Default: PROD
+  DeployBucket:
+    Description: Bucket where RiffRaff uploads artifacts on deploy
+    Type: String
+    Default: gu-jr-test-dist
+
+Resources:
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: logs
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: arn:aws:logs:*:*:*
+        - PolicyName: lambda
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                -  lambda:InvokeFunction
+              Resource: "*"
+        - PolicyName: api
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - execute-api:Invoke
+              Resource: "*"
+
+  WorkshopLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${App}-${Stage}
+      Code:
+        S3Bucket:
+          Ref: DeployBucket
+        S3Key:
+          !Sub ${Stack}/${Stage}/${App}/${App}.zip
+      Environment:
+        Variables:
+          Stage: !Ref Stage
+          Stack: !Ref Stack
+          App: !Ref App
+      Description: Test lambda for workshop
+      Handler: com.gu.jrTest.Lambda::handler
+      MemorySize: 512
+      Role: !GetAtt ExecutionRole.Arn
+      Runtime: java8
+      Timeout: 300
+
+  WorkshopApi:
+   Type: AWS::ApiGateway::RestApi
+   Properties:
+     Description: Api to call our lambda
+     Name: !Sub ${App}-api-${Stage}
+
+  WorkshopApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+        RestApiId: !Ref WorkshopApi
+        ParentId: !GetAtt [WorkshopApi, RootResourceId]
+        PathPart: helloWorld
+    DependsOn: WorkshopApi
+
+  WorkshopApiMethod:
+     Type: AWS::ApiGateway::Method
+     Properties:
+       AuthorizationType: NONE
+       RestApiId: !Ref WorkshopApi
+       ResourceId: !Ref WorkshopApiResource
+       HttpMethod: POST
+       Integration:
+         Type: AWS_PROXY
+         IntegrationHttpMethod: POST
+         Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WorkshopLambda.Arn}/invocations
+     DependsOn:
+     - WorkshopApi
+     - WorkshopLambda
+     - WorkshopApiResource
+
+  WorkshopApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      Description: Deploys the API into an environment/stage
+      RestApiId: !Ref WorkshopApi
+    DependsOn: WorkshopApiMethod
+
+  WorkshopApiStageProd:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: !Ref Stage
+      Description: Prod Stage
+      RestApiId: !Ref WorkshopApi
+      DeploymentId: !Ref WorkshopApiDeployment
+      Variables:
+        Stack: !Ref Stack
+      MethodSettings:
+        - ResourcePath: /helloWorld
+          HttpMethod: POST
+          MetricsEnabled: 'true'
+          DataTraceEnabled: 'true'
+          ThrottlingBurstLimit: '999'
+    DependsOn:
+    - WorkshopApi
+    - WorkshopApiDeployment
+
+  WorkshopLambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Sub ${App}-${Stage}
+      Principal: apigateway.amazonaws.com
+    DependsOn: WorkshopLambda

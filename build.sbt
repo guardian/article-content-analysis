@@ -1,4 +1,4 @@
-name := "jr-test"
+name := "article-entity-analysis"
 
 organization := "com.gu"
 

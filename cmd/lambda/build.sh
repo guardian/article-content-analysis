@@ -19,7 +19,7 @@ set -ve
 ROOT_DIR=$(dirname "$0")/../..
 cd ${ROOT_DIR}
 
-    PROJ_DIR=main/lambda
+    PROJ_DIR=cmd/lambda
 
 mkdir -p packages
 cp ${PROJ_DIR}/riff-raff.yaml packages

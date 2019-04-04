@@ -1,0 +1,17 @@
+target/
+build/
+project/boot
+.idea/
+
+.history
+.DS_Store
+*~
+
+.gradle
+
+*.iml
+
+*.log
+
+*.pem
+credentials.json

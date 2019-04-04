@@ -14,7 +14,7 @@
 
 set -ve
 
-# contributions-table root directory
+# article entity root directory
 # Rest of script is executed with this as the working directory.
 ROOT_DIR=$(dirname "$0")/../..
 cd ${ROOT_DIR}
@@ -61,7 +61,7 @@ cat >build.json << EOF
    "buildNumber":"${BUILD_NUMBER}",
    "startTime":"${BUILD_START_DATE}",
    "revision":"${BUILD_VCS_NUMBER}",
-   "vcsURL":"git@github.com:guardian/contributions-platform.git",
+   "vcsURL":"git@github.com:guardian/article-entity-analysis.git",
    "branch":"${BRANCH_NAME}"
 }
 EOF

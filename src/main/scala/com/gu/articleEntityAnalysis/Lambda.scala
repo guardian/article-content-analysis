@@ -1,4 +1,4 @@
-package com.gu.jrTest
+package com.gu.articleEntityAnalysis
 
 object Lambda {
 

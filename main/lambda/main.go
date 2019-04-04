@@ -6,7 +6,8 @@ import (
 )
 
 func main() {
-	lambda.Start(func() error {
+	lambda.Start(func() string {
 		internal.GetEntitiesForPath("/film/2019/apr/04/amazon-claims-woody-allen-sabotaged-films-with-metoo-comments")
+		return "test"
 	})
 }

@@ -5,7 +5,6 @@ go 1.12
 require (
 	github.com/aws/aws-lambda-go v1.10.0
 	github.com/aws/aws-sdk-go v1.19.9
-	github.com/guardian/contributions-platform/contributions-table v0.0.0-20190326095635-0057f9d0d831
 	github.com/pkg/errors v0.8.1
 	github.com/stretchr/testify v1.3.0 // indirect
 	github.com/tidwall/gjson v1.2.1

@@ -40,7 +40,7 @@ docker run --rm \
     bash -c "go build ${PROJ_DIR}/main.go"
 
 # Output of docker run command will be an executable file named main. Zip it.
-ZIP_FILE=lambda.zip
+ZIP_FILE=article-entity-analysis.zip
 zip ${ZIP_FILE} main
 
 LAMBDA_DIR=packages/article-entity-analysis

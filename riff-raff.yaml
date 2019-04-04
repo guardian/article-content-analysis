@@ -1,31 +1,31 @@
 stacks: [playground]
 regions: [eu-west-1]
 templates:
-  article-entity-analaysis:
+  article-entity-analysis:
     type: aws-lambda
-    app: article-entity-analaysis
-    contentDirectory: article-entity-analaysis
+    app: article-entity-analysis
+    contentDirectory: article-entity-analysis
     parameters:
-      bucket: article-entity-analaysis-dist
-      functionNames: [article-entity-analaysis-]
-      fileName:  article-entity-analaysis.zip
+      bucket: article-entity-analysis-dist
+      functionNames: [article-entity-analysis-]
+      fileName:  article-entity-analysis.zip
       prefixStack: false
 
 deployments:
-  article-entity-analaysis-upload:
-    template: article-entity-analaysis
+  article-entity-analysis-upload:
+    template: article-entity-analysis
     actions: [uploadLambda]
 
-  article-entity-analaysis-cfn:
+  article-entity-analysis-cfn:
     type: cloud-formation
-    app: article-entity-analaysis
-    dependencies: [article-entity-analaysis-upload]
+    app: article-entity-analysis
+    dependencies: [article-entity-analysis-upload]
     parameters:
       prependStackToCloudFormationStackName: false
-      cloudFormationStackName: article-entity-analaysis
+      cloudFormationStackName: article-entity-analysis
       templatePath: cfn.yaml
 
-  article-entity-analaysis-lambda-update:
-    template: article-entity-analaysis
+  article-entity-analysis-lambda-update:
+    template: article-entity-analysis
     actions: [updateLambda]
-    dependencies: [article-entity-analaysis-cfn]
+    dependencies: [article-entity-analysis-cfn]

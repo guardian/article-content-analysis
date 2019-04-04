@@ -20,7 +20,7 @@ Parameters:
   DeployBucket:
     Description: Bucket where RiffRaff uploads artifacts on deploy
     Type: String
-    Default: article-entity-analysis-dist
+    Default: gu-article-entity-analysis-dist
 
 Resources:
   ExecutionRole:

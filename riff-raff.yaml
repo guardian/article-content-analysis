@@ -6,7 +6,7 @@ templates:
     app: article-entity-analysis
     contentDirectory: article-entity-analysis
     parameters:
-      bucket: article-entity-analysis-dist
+      bucket: gu-article-entity-analysis-dist
       functionNames: [article-entity-analysis-]
       fileName:  article-entity-analysis.zip
       prefixStack: false

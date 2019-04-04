@@ -16,7 +16,7 @@ set -ve
 
 # contributions-table root directory
 # Rest of script is executed with this as the working directory.
-ROOT_DIR=$(dirname "$0")/../../..
+ROOT_DIR=$(dirname "$0")/../..
 cd ${ROOT_DIR}
 
     PROJ_DIR=main/lambda

@@ -2,7 +2,7 @@ stacks: [playground]
 regions: [eu-west-1]
 
 templates:
-  article-entity-analysis-lambda:
+  article-entity-analysis:
     type: aws-lambda
     app: article-entity-analysis
     contentDirectory: article-entity-analysis

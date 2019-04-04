@@ -43,7 +43,7 @@ docker run --rm \
 ZIP_FILE=lambda.zip
 zip ${ZIP_FILE} main
 
-LAMBDA_DIR=packages/article-entity-analysis-lambda
+LAMBDA_DIR=packages/article-entity-analysis
 mkdir -p ${LAMBDA_DIR}
 cp ${ZIP_FILE} ${LAMBDA_DIR}
 

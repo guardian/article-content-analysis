@@ -92,7 +92,7 @@ Resources:
         RestApiId: !Ref ArticleEntityAnalysisApi
         ParentId: !GetAtt [ArticleEntityAnalysisApi, RootResourceId]
         PathPart: getEntities
-    DependsOn: ArticleEntityAnalysisApiApi
+    DependsOn: ArticleEntityAnalysisApi
 
   ArticleEntityAnalysisApiMethod:
      Type: AWS::ApiGateway::Method

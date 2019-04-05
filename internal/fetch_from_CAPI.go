@@ -31,7 +31,8 @@ type EntityResult struct {
 	Entity string
 }
 
-func GetArticleFieldsFromPath(path string, apiKey string) *ArticleFields {
+func GetArticleFieldsFromPath(path string, apiKey string) (*ArticleFields, error) {
+	var articleFields = new(ArticleFields)
 	urlPrefix := "https://content.guardianapis.com"
 	urlSuffix := "?api-key=" + apiKey + "&show-fields=byline,bodyText,headline"
 	resp, err := http.Get(urlPrefix + path + urlSuffix)
@@ -41,17 +42,16 @@ func GetArticleFieldsFromPath(path string, apiKey string) *ArticleFields {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		panic("no response from CAPI")
+		return articleFields, errors.Wrap(err, "no response from CAPI")
 	}
 
 	fields := gjson.Get(string(body), "response.content.fields").Raw
 	fieldsBytes := []byte(fields)
-	var p = new(ArticleFields)
-	articleFieldsError := json.Unmarshal(fieldsBytes, &p)
+	articleFieldsError := json.Unmarshal(fieldsBytes, &articleFields)
 	if articleFieldsError != nil {
 		panic(articleFieldsError)
 	}
-	return p
+	return articleFields, nil
 }
 
 func GetEntities(client *comprehend.Comprehend, bodyText string) ([]*comprehend.Entity, error) {
@@ -95,7 +95,10 @@ func CreateComprehendClient(profile string) (*comprehend.Comprehend, error) {
 }
 
 func GetEntitiesForPath(path string) ([]*comprehend.Entity, error) {
-	articleFields := GetArticleFieldsFromPath(path, "test")
+	articleFields, err := GetArticleFieldsFromPath(path, "test")
+	if err != nil {
+		return nil, errors.Wrap(err, "Could'nt get article fields for given article")
+	}
 	client, err := CreateComprehendClient("developerPlayground")
 	if err != nil {
 		return nil, errors.Wrap(err, "couldn't create client")

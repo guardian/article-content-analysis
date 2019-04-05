@@ -74,11 +74,11 @@ Resources:
           Stack: !Ref Stack
           App: !Ref App
       Description: Lambda that returns article analysis
-      Handler: com.gu.articleEntityAnalysis.Lambda::handler
+      Handler: main
       MemorySize: 512
       Role: !GetAtt ExecutionRole.Arn
-      Runtime: java8
-      Timeout: 300
+      Runtime: go1.x
+      Timeout: 60
 
   ArticleEntityAnalysisApi:
     Type: AWS::ApiGateway::RestApi

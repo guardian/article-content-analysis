@@ -3,9 +3,9 @@ package main
 import (
 	"article-entity-analysis/internal"
 	"encoding/json"
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/pkg/errors"
-	"golang.org/x/net/context"
 	"net/http"
 )
 
@@ -13,16 +13,14 @@ type Path struct {
 	Path string `json:"path"`
 }
 
-type APIGatewayProxyResponse struct {
-	StatusCode      int               `json:"statusCode"`
-	Headers         map[string]string `json:"headers"`
-	Body            string            `json:"body"`
-	IsBase64Encoded bool              `json:"isBase64Encoded,omitempty"`
-}
-
-func HandleRequest(ctx context.Context, path Path) (APIGatewayProxyResponse, error) {
+func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var resString string
-	var res APIGatewayProxyResponse
+	var res events.APIGatewayProxyResponse
+	var path = new(Path)
+	var requestBodyError = json.Unmarshal([]byte(request.Body), &path)
+	if requestBodyError != nil {
+		return res, errors.Wrap(requestBodyError, "Could not parse json body")
+	}
 	entities, err := internal.GetEntitiesForPath(path.Path)
 	if err != nil {
 		return res, errors.Wrap(err, "Did not manage to get entities for path")
@@ -36,7 +34,7 @@ func HandleRequest(ctx context.Context, path Path) (APIGatewayProxyResponse, err
 		return res, errors.Wrap(err, "Could not marshall body")
 	}
 
-	return APIGatewayProxyResponse{
+	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
 		Body:       string(body),
 	}, nil

@@ -5,12 +5,15 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
+	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/comprehend"
 	"github.com/pkg/errors"
 	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 func HelloWorld() string {
@@ -72,16 +75,22 @@ func CreateComprehendClient(profile string) (*comprehend.Comprehend, error) {
 		return nil, errors.Wrap(err, "unable to create new sessions")
 	}
 
-	sess.Config.Credentials = credentials.NewCredentials(
-		&credentials.SharedCredentialsProvider{
-			Profile: profile,
+	sess.Config.Credentials = credentials.NewChainCredentials(
+		[]credentials.Provider{
+			&credentials.EnvProvider{},
+			&ec2rolecreds.EC2RoleProvider{
+				Client:       ec2metadata.New(sess),
+				ExpiryWindow: 5 * time.Minute,
+			},
+			&credentials.SharedCredentialsProvider{
+				Profile: profile,
+			},
 		},
 	)
 
 	if _, err := sess.Config.Credentials.Get(); err != nil {
 		return nil, errors.Wrap(err, "unable to get credentials")
 	}
-
 	return comprehend.New(sess), nil
 }
 

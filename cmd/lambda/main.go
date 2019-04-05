@@ -11,7 +11,10 @@ type Path struct {
 }
 
 func HandleRequest(ctx context.Context, path Path) (string, error) {
-	entities := internal.GetEntitiesForPath(path.Path)
+	entities, err := internal.GetEntitiesForPath(path.Path)
+	if err != nil {
+		return "", err
+	}
 	var res = ""
 	for _, entity := range entities {
 		res += entity.GoString()

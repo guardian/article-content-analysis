@@ -58,6 +58,13 @@ Resources:
               Action:
                 - execute-api:Invoke
               Resource: "*"
+        - PolicyName: comprehend
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - comprehend:*
+              Resource: "*"
 
   ArticleEntityAnalysisLambda:
     Type: AWS::Lambda::Function

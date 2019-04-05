@@ -85,21 +85,21 @@ func CreateComprehendClient(profile string) (*comprehend.Comprehend, error) {
 	return comprehend.New(sess), nil
 }
 
-func GetEntitiesForPath(path string) []*comprehend.Entity {
+func GetEntitiesForPath(path string) ([]*comprehend.Entity, error) {
 	articleFields := GetArticleFieldsFromPath(path, "test")
 	client, err := CreateComprehendClient("developerPlayground")
 	if err != nil {
-		panic("help!")
+		return nil, errors.Wrap(err, "couldn't create client")
 	}
 	res, err := GetEntities(client, articleFields.BodyText)
 
 	if err != nil {
-		panic("help!")
+		return nil, errors.Wrap(err, "couldn't get entities")
 	}
 
 	// value only
 	for _, entity := range res {
 		fmt.Println(entity.GoString())
 	}
-	return res
+	return res, nil
 }

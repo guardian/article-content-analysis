@@ -13,7 +13,7 @@ func TestHelloWorld(t *testing.T) {
 }
 
 func TestGetArticleFieldsFromPath(t *testing.T) {
-	res := GetArticleFieldsFromPath("/film/2019/apr/04/amazon-claims-woody-allen-sabotaged-films-with-metoo-comments", "test")
+	res, err := GetArticleFieldsFromPath("/film/2019/apr/04/amazon-claims-woody-allen-sabotaged-films-with-metoo-comments", "test")
 	fmt.Print(res)
 }
 

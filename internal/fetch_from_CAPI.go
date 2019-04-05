@@ -49,7 +49,7 @@ func GetArticleFieldsFromPath(path string, apiKey string) (*ArticleFields, error
 	fieldsBytes := []byte(fields)
 	articleFieldsError := json.Unmarshal(fieldsBytes, &articleFields)
 	if articleFieldsError != nil {
-		panic(articleFieldsError)
+		return articleFields, errors.Wrap(err, "could not parse response from CAPI")
 	}
 	return articleFields, nil
 }

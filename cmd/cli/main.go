@@ -1,6 +1,6 @@
 package main
 
-import "article-entity-analysis/internal"
+import "article-content-analysis/internal"
 
 func main() {
 	internal.HelloWorld()

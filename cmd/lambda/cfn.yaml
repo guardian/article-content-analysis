@@ -9,7 +9,7 @@ Parameters:
   App:
     Description: Application name
     Type: String
-    Default: article-entity-analysis
+    Default: article-content-analysis
   Stage:
     Description: Stage name
     Type: String
@@ -20,7 +20,7 @@ Parameters:
   DeployBucket:
     Description: Bucket where RiffRaff uploads artifacts on deploy
     Type: String
-    Default: gu-article-entity-analysis-dist
+    Default: gu-article-content-analysis-dist
 
 Resources:
   ExecutionRole:
@@ -66,7 +66,7 @@ Resources:
                 - comprehend:*
               Resource: "*"
 
-  ArticleEntityAnalysisLambda:
+  ArticleContentAnalysisLambda:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub ${App}-${Stage}
@@ -87,50 +87,50 @@ Resources:
       Runtime: go1.x
       Timeout: 60
 
-  ArticleEntityAnalysisApi:
+  ArticleContentAnalysisApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Description: Api to call our lambda
       Name: !Sub ${App}-api-${Stage}
 
-  ArticleEntityAnalysisApiResource:
+  ArticleContentAnalysisApiResource:
     Type: AWS::ApiGateway::Resource
     Properties:
-      RestApiId: !Ref ArticleEntityAnalysisApi
-      ParentId: !GetAtt [ArticleEntityAnalysisApi, RootResourceId]
+      RestApiId: !Ref ArticleContentAnalysisApi
+      ParentId: !GetAtt [ArticleContentAnalysisApi, RootResourceId]
       PathPart: getEntities
-    DependsOn: ArticleEntityAnalysisApi
+    DependsOn: ArticleContentAnalysisApi
 
-  ArticleEntityAnalysisApiMethod:
+  ArticleContentAnalysisApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
-      RestApiId: !Ref ArticleEntityAnalysisApi
-      ResourceId: !Ref ArticleEntityAnalysisApiResource
+      RestApiId: !Ref ArticleContentAnalysisApi
+      ResourceId: !Ref ArticleContentAnalysisApiResource
       HttpMethod: POST
       Integration:
         Type: AWS_PROXY
         IntegrationHttpMethod: POST
-        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ArticleEntityAnalysisLambda.Arn}/invocations
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ArticleContentAnalysisLambda.Arn}/invocations
     DependsOn:
-      - ArticleEntityAnalysisApi
-      - ArticleEntityAnalysisLambda
-      - ArticleEntityAnalysisApiResource
+      - ArticleContentAnalysisApi
+      - ArticleContentAnalysisLambda
+      - ArticleContentAnalysisApiResource
 
-  ArticleEntityAnalysisApiDeployment:
+  ArticleContentAnalysisApiDeployment:
     Type: AWS::ApiGateway::Deployment
     Properties:
       Description: Deploys the API into an environment/stage
-      RestApiId: !Ref ArticleEntityAnalysisApi
-    DependsOn: ArticleEntityAnalysisApiMethod
+      RestApiId: !Ref ArticleContentAnalysisApi
+    DependsOn: ArticleContentAnalysisApiMethod
 
-  ArticleEntityAnalysisApiStageProd:
+  ArticleContentAnalysisApiStageProd:
     Type: AWS::ApiGateway::Stage
     Properties:
       StageName: !Ref Stage
       Description: Prod Stage
-      RestApiId: !Ref ArticleEntityAnalysisApi
-      DeploymentId: !Ref ArticleEntityAnalysisApiDeployment
+      RestApiId: !Ref ArticleContentAnalysisApi
+      DeploymentId: !Ref ArticleContentAnalysisApiDeployment
       Variables:
         Stack: !Ref Stack
       MethodSettings:
@@ -140,13 +140,13 @@ Resources:
           DataTraceEnabled: 'true'
           ThrottlingBurstLimit: '999'
     DependsOn:
-      - ArticleEntityAnalysisApi
-      - ArticleEntityAnalysisApiDeployment
+      - ArticleContentAnalysisApi
+      - ArticleContentAnalysisApiDeployment
 
-  ArticleEntityAnalysisLambdaInvokePermission:
+  ArticleContentAnalysisLambdaInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: !Sub ${App}-${Stage}
       Principal: apigateway.amazonaws.com
-    DependsOn: ArticleEntityAnalysisLambda
+    DependsOn: ArticleContentAnalysisLambda

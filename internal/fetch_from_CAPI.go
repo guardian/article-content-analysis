@@ -41,6 +41,7 @@ func GetArticleFieldsFromPath(path string, apiKey string) (*ArticleFields, error
 		return articleFields, errors.Wrap(err, "could not read body test")
 	}
 
+	//TODO: validate response
 	fields := gjson.Get(string(body), "response.content.fields").Raw
 	fieldsBytes := []byte(fields)
 	articleFieldsError := json.Unmarshal(fieldsBytes, &articleFields)
@@ -58,7 +59,6 @@ func GetEntities(client *comprehend.Comprehend, bodyText string) ([]*comprehend.
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get entities")
 	}
-
 	return result.Entities, nil
 }
 
@@ -96,6 +96,7 @@ func GetEntitiesForPath(path string) ([]*comprehend.Entity, error) {
 		return nil, errors.Wrap(err, "Could'nt get article fields for given article")
 	}
 	client, err := CreateComprehendClient("developerPlayground")
+
 	if err != nil {
 		return nil, errors.Wrap(err, "couldn't create client")
 	}

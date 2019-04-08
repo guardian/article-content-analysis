@@ -17,7 +17,6 @@ func TestGetEntitiesForPath(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-
 	for _, entity := range res {
 		fmt.Println(entity.GoString())
 	}

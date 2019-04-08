@@ -1,4 +1,4 @@
-module article-entity-analysis
+module article-content-analysis
 
 go 1.12
 

@@ -7,14 +7,14 @@
 # packages
 # |-- riff-raff.yaml
 # |-- build.json
-# |-- article-entity-analysis-cfn
+# |-- article-content-analysis-cfn
 # |   |-- cfn.yaml
-# |-- article-entity-analysis
+# |-- article-content-analysis
 # |   |-- lambda.zip
 
 set -ve
 
-# article entity root directory
+# article content root directory
 # Rest of script is executed with this as the working directory.
 ROOT_DIR=$(dirname "$0")/../..
 cd ${ROOT_DIR}
@@ -24,7 +24,7 @@ cd ${ROOT_DIR}
 mkdir -p packages
 cp ${PROJ_DIR}/riff-raff.yaml packages
 
-CFN_DIR=packages/article-entity-analysis-cfn
+CFN_DIR=packages/article-content-analysis-cfn
 mkdir -p ${CFN_DIR}
 cp ${PROJ_DIR}/cfn.yaml ${CFN_DIR}
 
@@ -40,16 +40,16 @@ docker run --rm \
     bash -c "go build ${PROJ_DIR}/main.go"
 
 # Output of docker run command will be an executable file named main. Zip it.
-ZIP_FILE=article-entity-analysis.zip
+ZIP_FILE=article-content-analysis.zip
 zip ${ZIP_FILE} main
 
-LAMBDA_DIR=packages/article-entity-analysis
+LAMBDA_DIR=packages/article-content-analysis
 mkdir -p ${LAMBDA_DIR}
 cp ${ZIP_FILE} ${LAMBDA_DIR}
 
-PROJECT_NAME=article-entity-analysis
+PROJECT_NAME=article-content-analysis
 BUILD_NUMBER=${BUILD_NUMBER=DEV}
-BUILD_NAME=article-entity-analysis-build.${BUILD_NUMBER}
+BUILD_NAME=article-content-analysis-build.${BUILD_NUMBER}
 BUILD_START_DATE=$(date +"%Y-%m-%dT%H:%M:%S.000Z")
 
 # Note BUILD_NUMBER and BUILD_VCS_NUMBER are predefined Team City build parameters.
@@ -61,7 +61,7 @@ cat >build.json << EOF
    "buildNumber":"${BUILD_NUMBER}",
    "startTime":"${BUILD_START_DATE}",
    "revision":"${BUILD_VCS_NUMBER}",
-   "vcsURL":"git@github.com:guardian/article-entity-analysis.git",
+   "vcsURL":"git@github.com:guardian/article-content-analysis.git",
    "branch":"${BRANCH_NAME}"
 }
 EOF

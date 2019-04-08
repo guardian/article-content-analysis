@@ -1,12 +1,10 @@
 package services
 
-type ArticleFields struct {
-	Headline string `json:"headline"`
-	Byline   string `json:"byline"`
-	BodyText string `json:"bodyText"`
-}
+import (
+	"article-content-analysis/internal/models"
+)
 
-func GetArticleFieldsFromCapi(path string) (*ArticleFields, error) {
-	var articleFields = new(ArticleFields)
+func GetArticleFieldsFromCapi(path string) (*models.ArticleFields, error) {
+	var articleFields = new(models.ArticleFields)
 	return articleFields, nil
 }

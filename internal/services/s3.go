@@ -1,12 +1,14 @@
 package services
 
-import "article-content-analysis/internal"
+import (
+	"article-content-analysis/internal/models"
+)
 
-func GetContentAnalysisFromS3(path string) (*internal.ContentAnalysis, error) {
-	var contentAnalysis = new(internal.ContentAnalysis)
+func GetContentAnalysisFromS3(path string) (*models.ContentAnalysis, error) {
+	var contentAnalysis = new(models.ContentAnalysis)
 	return contentAnalysis, nil
 }
 
-func StoreContentAnalysisInS3(contentAnalysis *internal.ContentAnalysis) (error) {
+func StoreContentAnalysisInS3(contentAnalysis *models.ContentAnalysis) (error) {
 	return nil
 }

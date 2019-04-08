@@ -12,11 +12,13 @@ func TestHelloWorld(t *testing.T) {
 	}
 }
 
-func TestGetArticleFieldsFromPath(t *testing.T) {
-	res, err := GetArticleFieldsFromPath("/film/2019/apr/04/amazon-claims-woody-allen-sabotaged-films-with-metoo-comments", "test")
-	fmt.Print(res)
-}
-
 func TestGetEntitiesForPath(t *testing.T) {
-	GetEntitiesForPath("/film/2019/apr/04/amazon-claims-woody-allen-sabotaged-films-with-metoo-comments")
+	res, err := GetEntitiesForPath("/film/2019/apr/04/amazon-claims-woody-allen-sabotaged-films-with-metoo-comments")
+	if err != nil {
+		t.Error(err)
+	}
+
+	for _, entity := range res {
+		fmt.Println(entity.GoString())
+	}
 }

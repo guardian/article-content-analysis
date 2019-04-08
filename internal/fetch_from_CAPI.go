@@ -27,22 +27,18 @@ type ArticleFields struct {
 	BodyText string `json:"bodyText"`
 }
 
-type EntityResult struct {
-	Entity string
-}
-
 func GetArticleFieldsFromPath(path string, apiKey string) (*ArticleFields, error) {
 	var articleFields = new(ArticleFields)
 	urlPrefix := "https://content.guardianapis.com"
 	urlSuffix := "?api-key=" + apiKey + "&show-fields=byline,bodyText,headline"
 	resp, err := http.Get(urlPrefix + path + urlSuffix)
 	if err != nil {
-		panic("no response from CAPI")
+		return articleFields, errors.Wrap(err, "no response from CAPI")
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return articleFields, errors.Wrap(err, "no response from CAPI")
+		return articleFields, errors.Wrap(err, "could not read body test")
 	}
 
 	fields := gjson.Get(string(body), "response.content.fields").Raw
@@ -103,15 +99,19 @@ func GetEntitiesForPath(path string) ([]*comprehend.Entity, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "couldn't create client")
 	}
+
+	// TODO: check S3 for response
+
+	// if not found, get entities
 	res, err := GetEntities(client, articleFields.BodyText)
+
+	// TODO: construct response
+
+	// TODO: store response in S3
 
 	if err != nil {
 		return nil, errors.Wrap(err, "couldn't get entities")
 	}
 
-	// value only
-	for _, entity := range res {
-		fmt.Println(entity.GoString())
-	}
 	return res, nil
 }

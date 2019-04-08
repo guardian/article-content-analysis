@@ -1,7 +1,7 @@
 package main
 
 import (
-	"article-content-analysis/internal"
+	"article-content-analysis/internal/services"
 	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -22,7 +22,7 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 	if requestBodyError != nil {
 		return res, errors.Wrap(requestBodyError, "Could not parse json body")
 	}
-	entities, err := internal.GetEntitiesForPath(path.Path)
+	entities, err := services.GetEntitiesFromPath(path.Path)
 	if err != nil {
 		return res, errors.Wrap(err, "Did not manage to get entities for path")
 	}

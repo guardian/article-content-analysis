@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func ConstructContentAnalysis(articleFields *models.ArticleFields, entities *[]comprehend.Entity) *models.ContentAnalysis {
+func ConstructContentAnalysis(articleFields *models.ArticleFields, entities []*comprehend.Entity) *models.ContentAnalysis {
 	return new(models.ContentAnalysis)
 }
 
@@ -22,12 +22,13 @@ func GetContentAnalysis(path string) (*models.ContentAnalysis, error) {
 		return contentAnalysis, nil
 	}
 
-	articleFields, err := services.GetArticleFieldsFromCapi(path)
+	articleFields, err := services.GetArticleFieldsFromCapi(path, "test")
+
 	if err != nil {
-		return contentAnalysis, err
+		return contentAnalysis, errors.Wrap(err, "Couldn't get article fields from CAPI for given path")
 	}
 
-	entities, err := services.GetEntitiesFromComprehend(articleFields.BodyText)
+	entities, err := services.GetEntitiesFromPath(path)
 
 	contentAnalysis = ConstructContentAnalysis(articleFields, entities)
 
@@ -39,4 +40,3 @@ func GetContentAnalysis(path string) (*models.ContentAnalysis, error) {
 
 	return contentAnalysis, nil
 }
-

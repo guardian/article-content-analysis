@@ -81,7 +81,7 @@ func GetContentAnalysis(path string, capiKey string) (*models.ContentAnalysis, e
 	storeContentAnalysisInS3Error := services.StoreContentAnalysisInS3(contentAnalysis)
 
 	if storeContentAnalysisInS3Error != nil {
-		return nil, errors.Wrap(err, "Could not store in S3")
+		return nil, errors.Wrap(storeContentAnalysisInS3Error, "Could not store in S3")
 	}
 
 	return contentAnalysis, nil

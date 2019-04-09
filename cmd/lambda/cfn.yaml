@@ -87,6 +87,27 @@ Resources:
       Runtime: go1.x
       Timeout: 60
 
+  GenderAnalysisLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${App}-Gender-Analysis-${Stage}
+      Code:
+        S3Bucket:
+          Ref: DeployBucket
+        S3Key:
+          !Sub ${Stack}/${Stage}/${App}/${App-Gender-Analysis}.zip
+      Environment:
+        Variables:
+          Stage: !Ref Stage
+          Stack: !Ref Stack
+          App: !Ref App
+      Description: Lambda that returns article analysis
+      Handler: main
+      MemorySize: 512
+      Role: !GetAtt ExecutionRole.Arn
+      Runtime: go1.x
+      Timeout: 60
+
   ArticleContentAnalysisApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
@@ -102,6 +123,22 @@ Resources:
     DependsOn: ArticleContentAnalysisApi
 
   ArticleContentAnalysisApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId: !Ref ArticleContentAnalysisApi
+      ResourceId: !Ref ArticleContentAnalysisApiResource
+      HttpMethod: POST
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ArticleContentAnalysisLambda.Arn}/invocations
+    DependsOn:
+      - ArticleContentAnalysisApi
+      - ArticleContentAnalysisLambda
+      - ArticleContentAnalysisApiResource
+
+  GenderAnalysisApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
@@ -135,6 +172,25 @@ Resources:
         Stack: !Ref Stack
       MethodSettings:
         - ResourcePath: /getEntities
+          HttpMethod: POST
+          MetricsEnabled: 'true'
+          DataTraceEnabled: 'true'
+          ThrottlingBurstLimit: '999'
+    DependsOn:
+      - ArticleContentAnalysisApi
+      - ArticleContentAnalysisApiDeployment
+
+  GenderAnalysisStageProd:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: !Ref Stage
+      Description: Prod Stage
+      RestApiId: !Ref ArticleContentAnalysisApi
+      DeploymentId: !Ref ArticleContentAnalysisApiDeployment
+      Variables:
+        Stack: !Ref Stack
+      MethodSettings:
+        - ResourcePath: /getGender
           HttpMethod: POST
           MetricsEnabled: 'true'
           DataTraceEnabled: 'true'

@@ -10,7 +10,7 @@ import (
 )
 
 type LambdaInput struct {
-	Path string `json:"path"`
+	Path    string `json:"path"`
 	CapiKey string `json:"capiKey"`
 }
 

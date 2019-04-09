@@ -65,6 +65,13 @@ Resources:
               Action:
                 - comprehend:*
               Resource: "*"
+        - PolicyName: s3
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - s3:*
+              Resource: "*"
 
   ArticleContentAnalysisLambda:
     Type: AWS::Lambda::Function

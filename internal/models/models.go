@@ -36,5 +36,5 @@ type ContentAnalysis struct {
 	Organisations      []*comprehend.Entity `json:"organisations"`
 	CreativeWorkTitles []*comprehend.Entity `json:"creativeWorkTitles"`
 	CommercialItems    []*comprehend.Entity `json:"commercialItems"`
-	Events             []*comprehend.Entity `json:"evnets"`
+	Events             []*comprehend.Entity `json:"events"`
 }

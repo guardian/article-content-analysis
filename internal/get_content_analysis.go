@@ -58,7 +58,7 @@ func ConstructContentAnalysis(path string, articleFields *models.ArticleFields, 
 }
 
 func GetContentAnalysis(path string, capiKey string) (*models.ContentAnalysis, error) {
-	contentAnalysis, err := services.GetContentAnalysisFromS3(path)	//will return error if object is not in s3
+	contentAnalysis, err := services.GetContentAnalysisFromS3(path) //will return error if object is not in s3
 
 	if contentAnalysis != nil {
 		return contentAnalysis, nil
@@ -81,7 +81,7 @@ func GetContentAnalysis(path string, capiKey string) (*models.ContentAnalysis, e
 	storeContentAnalysisInS3Error := services.StoreContentAnalysisInS3(contentAnalysis)
 
 	if storeContentAnalysisInS3Error != nil {
-		panic("Could not store in S3")
+		return nil, errors.Wrap(err, "Could not store in S3")
 	}
 
 	return contentAnalysis, nil

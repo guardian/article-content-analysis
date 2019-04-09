@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetContentAnalysis(t *testing.T) {
-	res, err := GetContentAnalysis("/commentisfree/2019/apr/08/workers-rights-survive-brexit-labour-demand-more", "test")
+	res, err := GetContentAnalysis("/politics/2019/apr/09/tory-islamophobia-sajid-javid-facebook-anti-muslim-posts-party-members", "test")
 
 	if err != nil {
 		t.Error(err)

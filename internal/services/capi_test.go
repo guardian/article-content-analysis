@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 )
@@ -10,7 +11,11 @@ func TestGetArticleFieldsFromCapi(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	} else {
-		fmt.Println(res.Byline)
-		fmt.Println(res.BodyText)
+		res, err := json.Marshal(res)
+		if err != nil {
+			t.Error(err)
+		} else {
+			fmt.Println(string(res))
+		}
 	}
 }

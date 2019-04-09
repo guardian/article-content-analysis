@@ -57,14 +57,14 @@ func ConstructContentAnalysis(path string, articleFields *models.ArticleFields, 
 	return &contentAnalysis
 }
 
-func GetContentAnalysis(path string) (*models.ContentAnalysis, error) {
+func GetContentAnalysis(path string, capiKey string) (*models.ContentAnalysis, error) {
 	contentAnalysis, err := services.GetContentAnalysisFromS3(path)
 
 	if contentAnalysis != nil {
 		return contentAnalysis, nil
 	}
 
-	articleFields, err := services.GetArticleFieldsFromCapi(path, "test")
+	articleFields, err := services.GetArticleFieldsFromCapi(path, capiKey)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "Couldn't get article fields from CAPI for given path")

@@ -59,9 +59,6 @@ func ConstructContentAnalysis(path string, articleFields *models.ArticleFields, 
 
 func GetContentAnalysis(path string) (*models.ContentAnalysis, error) {
 	contentAnalysis, err := services.GetContentAnalysisFromS3(path)
-	if err != nil {
-		return contentAnalysis, errors.Wrap(err, "Could'nt get article fields for given article")
-	}
 
 	if contentAnalysis != nil {
 		return contentAnalysis, nil

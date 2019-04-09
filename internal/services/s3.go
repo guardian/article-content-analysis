@@ -16,6 +16,9 @@ func GetContentAnalysisFromS3(path string) (*models.ContentAnalysis, error) {
 	var contentAnalysis *models.ContentAnalysis = nil
 
 	sess, err := GetAwsSession("membership", "eu-west-1")
+	if err != nil {
+		return contentAnalysis,fmt.Errorf("failed to create aws session, %v", err)
+	}
 
 	downloader := s3manager.NewDownloader(sess)
 

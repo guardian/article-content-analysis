@@ -1,7 +1,7 @@
 package main
 
 import (
-	"article-content-analysis/internal/services"
+	"article-content-analysis/internal"
 	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -14,7 +14,6 @@ type Path struct {
 }
 
 func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	var resString string
 	var res events.APIGatewayProxyResponse
 	var path = new(Path)
 	var requestBodyError = json.Unmarshal([]byte(request.Body), &path)
@@ -22,15 +21,12 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 	if requestBodyError != nil {
 		return res, errors.Wrap(requestBodyError, "Could not parse json body")
 	}
-	entities, err := services.GetEntitiesFromPath(path.Path)
+	contentAnalysis, err := internal.GetContentAnalysis(path.Path)
 	if err != nil {
 		return res, errors.Wrap(err, "Did not manage to get entities for path")
 	}
-	for _, entity := range entities {
-		resString += entity.GoString()
-	}
 
-	body, err := json.Marshal(resString)
+	body, err := json.Marshal(contentAnalysis)
 	if err != nil {
 		return res, errors.Wrap(err, "Could not marshall body")
 	}

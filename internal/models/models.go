@@ -12,8 +12,8 @@ type Gender int
 
 const (
 	Unknown Gender = 0
-	Male    Gender = 1
-	Female  Gender = 2
+	Female  Gender = 1
+	Male    Gender = 2
 )
 
 type Byline struct {

@@ -9,19 +9,20 @@ import (
 	"net/http"
 )
 
-type Path struct {
+type LambdaInput struct {
 	Path string `json:"path"`
+	CapiKey string `json:"capiKey"`
 }
 
 func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var res events.APIGatewayProxyResponse
-	var path = new(Path)
-	var requestBodyError = json.Unmarshal([]byte(request.Body), &path)
+	var input = new(LambdaInput)
+	var requestBodyError = json.Unmarshal([]byte(request.Body), &input)
 
 	if requestBodyError != nil {
 		return res, errors.Wrap(requestBodyError, "Could not parse json body")
 	}
-	contentAnalysis, err := internal.GetContentAnalysis(path.Path)
+	contentAnalysis, err := internal.GetContentAnalysis(input.Path, input.CapiKey)
 	if err != nil {
 		return res, errors.Wrap(err, "Did not manage to get entities for path")
 	}

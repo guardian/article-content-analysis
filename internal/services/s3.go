@@ -5,10 +5,11 @@ import (
 )
 
 func GetContentAnalysisFromS3(path string) (*models.ContentAnalysis, error) {
-	var contentAnalysis = new(models.ContentAnalysis)
+	var contentAnalysis *models.ContentAnalysis = nil
+
 	return contentAnalysis, nil
 }
 
-func StoreContentAnalysisInS3(contentAnalysis *models.ContentAnalysis) (error) {
+func StoreContentAnalysisInS3(contentAnalysis *models.ContentAnalysis) error {
 	return nil
 }

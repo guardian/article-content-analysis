@@ -9,13 +9,15 @@ type ArticleFields struct {
 }
 
 type Gender int
+
 const (
-	Male	Gender = 0
-	Female	Gender = 1
+	Unknown Gender = 0
+	Male    Gender = 1
+	Female  Gender = 2
 )
 
 type Byline struct {
-	Name string
+	Name   string
 	Gender Gender
 }
 
@@ -25,14 +27,14 @@ type Person struct {
 }
 
 type ContentAnalysis struct {
-	Path string
-	Headline string
-	BodyText string
-	Bylines []Byline
-	People []Person
-	Locations []comprehend.Entity
-	Organisations []comprehend.Entity
-	CreativeWorkTitles []comprehend.Entity
-	CommercialItem []comprehend.Entity
-	Events []comprehend.Entity
+	Path               string               `json:"path"`
+	Headline           string               `json:"headline"`
+	BodyText           string               `json:"bodyText"`
+	Bylines            []*Byline            `json:"bylines"`
+	People             []*Person            `json:"people"`
+	Locations          []*comprehend.Entity `json:"locations"`
+	Organisations      []*comprehend.Entity `json:"organisations"`
+	CreativeWorkTitles []*comprehend.Entity `json:"creativeWorkTitles"`
+	CommercialItems    []*comprehend.Entity `json:"commercialItems"`
+	Events             []*comprehend.Entity `json:"evnets"`
 }

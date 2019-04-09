@@ -10,7 +10,7 @@ import (
 )
 
 func TestGetContentAnalysisFromS3(t *testing.T) {
-	res, err := services.GetContentAnalysisFromS3("/commentisfree/2019/apr/08/workers-rights-survive-brexit-labour-demand-more")
+	res, err := services.GetContentAnalysisFromS3("/commentisfree/2019/apr/08/wall-street-socialism-jpmorgan-jamie-dimon-bailout")
 	if err != nil {
 		t.Error(err)
 	} else {
@@ -19,10 +19,10 @@ func TestGetContentAnalysisFromS3(t *testing.T) {
 }
 
 func TestStoreContentAnalysisInS3(t *testing.T) {
-	articleFields := models.ArticleFields{"test_headline","test_byline","test_body"}
+	articleFields := models.ArticleFields{"test_headline", "test_byline", "test_body"}
 	var events []*comprehend.Entity = nil
 	contentAnalysis := internal.ConstructContentAnalysis(
-		"/commentisfree/2019/apr/08/workers-rights-survive-brexit-labour-demand-more",
+		"/commentisfree/2019/apr/08/wall-street-socialism-jpmorgan-jamie-dimon-bailout",
 		&articleFields,
 		events,
 	)

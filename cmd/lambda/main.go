@@ -9,14 +9,14 @@ import (
 	"net/http"
 )
 
-type Input struct {
+type LambdaInput struct {
 	Path string `json:"path"`
 	CapiKey string `json:"capiKey"`
 }
 
 func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var res events.APIGatewayProxyResponse
-	var input = new(Input)
+	var input = new(LambdaInput)
 	var requestBodyError = json.Unmarshal([]byte(request.Body), &input)
 
 	if requestBodyError != nil {

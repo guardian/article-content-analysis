@@ -58,7 +58,7 @@ func ConstructContentAnalysis(path string, articleFields *models.ArticleFields, 
 }
 
 func GetContentAnalysis(path string, capiKey string) (*models.ContentAnalysis, error) {
-	contentAnalysis, err := services.GetContentAnalysisFromS3(path)
+	contentAnalysis, err := services.GetContentAnalysisFromS3(path)	//will return error if object is not in s3
 
 	if contentAnalysis != nil {
 		return contentAnalysis, nil

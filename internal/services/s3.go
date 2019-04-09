@@ -4,20 +4,21 @@ import (
 	"article-content-analysis/internal/models"
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/pkg/errors"
 )
 
 const BucketName = "article-content-analysis"	//TODO - config?
 
+// Returns error if object is not in s3
 func GetContentAnalysisFromS3(path string) (*models.ContentAnalysis, error) {
 	var contentAnalysis *models.ContentAnalysis = nil
 
 	sess, err := GetAwsSession("membership", "eu-west-1")
 	if err != nil {
-		return contentAnalysis,fmt.Errorf("failed to create aws session, %v", err)
+		return contentAnalysis, errors.Wrap(err, "failed to create aws session")
 	}
 
 	downloader := s3manager.NewDownloader(sess)
@@ -29,12 +30,12 @@ func GetContentAnalysisFromS3(path string) (*models.ContentAnalysis, error) {
 		Key:    aws.String(path),
 	})
 	if err != nil {
-		return contentAnalysis, fmt.Errorf("failed to download file, %v", err)
+		return contentAnalysis, errors.Wrap(err,"failed to download file")
 	}
 
 	unmarshallError := json.Unmarshal(buffer.Bytes(), &contentAnalysis)
 	if unmarshallError != nil {
-		return contentAnalysis, fmt.Errorf("failed to unmarshall s3 data, %v", err)
+		return contentAnalysis, errors.Wrap(err, "failed to unmarshall s3 data")
 	}
 
 	return contentAnalysis, nil
@@ -46,7 +47,7 @@ func StoreContentAnalysisInS3(contentAnalysis *models.ContentAnalysis) error {
 
 	marshalled, err := json.Marshal(contentAnalysis)
 	if err != nil {
-		return fmt.Errorf("failed to marshall data for S3 upload, %v", err)
+		return errors.Wrap(err, "failed to marshall data for S3 upload")
 	}
 
 	_, err = uploader.Upload(&s3manager.UploadInput{

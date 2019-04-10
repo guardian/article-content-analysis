@@ -13,6 +13,7 @@
   "dependencies": {
     "compromise": "^11.13.2",
     "node-fetch": "^2.3.0",
+    "node-riffraff-artefact": "^2.0.1",
     "require": "^2.4.20"
   }
 }

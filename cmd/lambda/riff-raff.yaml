@@ -15,10 +15,10 @@ templates:
   article-content-analysis-gender-analysis:
     type: aws-lambda
     app: gender-analysis
-    contentDirectory: article-content-analysis
+    contentDirectory: gender-analysis
     parameters:
-      bucket: gu-article-content-analysis-dist
-      functionNames: [article-content-analysis-gender-analysis-]
+      bucket: gender-analysis-dist
+      functionNames: [gender-analysis-]
       fileName:  gender-analysis.zip
       prefixStack: false
 
@@ -46,7 +46,6 @@ deployments:
     actions: [uploadLambda]
 
   article-content-analysis-gender-analysis-lambda-update:
-    template: article-content-analysis
+    template: article-content-analysis-gender-analysis
     actions: [updateLambda]
-    dependencies: [article-content-analysis-cfn]
 

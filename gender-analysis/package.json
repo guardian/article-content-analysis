@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "npm rebuild grpc --target=8.10 --target_arch=x64 --target_platform=linux --target_libc=glibc",
+    "test": "make test",
+    "riffraff-artefact": "VERBOSE=true ARTEFACT_PATH=$PWD riffraff-artefact"
   },
   "author": "",
   "license": "ISC",

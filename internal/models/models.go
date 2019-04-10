@@ -17,8 +17,8 @@ const (
 )
 
 type Byline struct {
-	Name   string
-	Gender Gender
+	Name   string `json:"name"`
+	Gender Gender `json:"gender"`
 }
 
 type Person struct {

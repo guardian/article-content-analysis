@@ -5,7 +5,7 @@
   "main": "index.js",
   "isAwsLambda": "true",
   "cloudformation": "false",
-  "riffraffFile": "../cmd/lamnda/riff-raff.yaml",
+  "riffraffFile": "../cmd/lambda/riff-raff.yaml",
   "uploadArtefact": "true",
   "scripts": {
     "postinstall": "npm rebuild grpc --target=8.10 --target_arch=x64 --target_platform=linux --target_libc=glibc",

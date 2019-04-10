@@ -15,7 +15,7 @@ templates:
   article-content-analysis-gender-analysis:
     type: aws-lambda
     app: gender-analysis
-    contentDirectory: gender-analysis
+    contentDirectory: article-content-analysis
     parameters:
       bucket: gender-analysis-dist
       functionNames: [gender-analysis-]

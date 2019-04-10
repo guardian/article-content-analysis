@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "isAwsLambda": "true",
-  "cloudformation": "false",
+  "isAwsLambda": true,
+  "cloudformation": false,
   "riffraffFile": "../cmd/lambda/riff-raff.yaml",
   "uploadArtefact": "true",
   "scripts": {

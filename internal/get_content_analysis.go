@@ -60,6 +60,45 @@ func ConstructContentAnalysis(path string, content *models.Content, entities []*
 	return &contentAnalysis
 }
 
+func AddGenderToContentAnalysis(contentAnalysis *models.ContentAnalysis) (*models.ContentAnalysis, error) {
+	for _, person := range contentAnalysis.People {
+		genderAnalysis, err := services.GetGenderAnalysis(*person.Text)
+
+		if err != nil {
+			return nil, errors.Wrap(err, "Error getting gender analysis for "+*person.Text)
+		}
+
+		if len(genderAnalysis.People) > 0 {
+			if genderAnalysis.People[0].GenderGuess == "Female" {
+				person.Gender = 1
+			}
+			if genderAnalysis.People[0].GenderGuess == "Male" {
+				person.Gender = 2
+			}
+		}
+	}
+
+	for _, person := range contentAnalysis.Bylines {
+		genderAnalysis, err := services.GetGenderAnalysis(person.Name)
+
+		if err != nil {
+			return nil, errors.Wrap(err, "Error getting gender analysis for byline "+person.Name)
+		}
+
+		if len(genderAnalysis.People) > 0 {
+			if genderAnalysis.People[0].GenderGuess == "Female" {
+				person.Gender = 1
+			}
+			if genderAnalysis.People[0].GenderGuess == "Male" {
+				person.Gender = 2
+			}
+		}
+	}
+
+	return contentAnalysis, nil
+
+}
+
 func GetContentAnalysis(path string, capiKey string) (*models.ContentAnalysis, error) {
 	contentAnalysis, err := services.GetContentAnalysisFromS3(path) //will return error if object is not in s3
 
@@ -82,7 +121,13 @@ func GetContentAnalysis(path string, capiKey string) (*models.ContentAnalysis, e
 
 	contentAnalysis = ConstructContentAnalysis(path, articleFields, entities, false)
 
-	storeContentAnalysisInS3Error := services.StoreContentAnalysisInS3(contentAnalysis)
+	contentAnalysisWithGender, err := AddGenderToContentAnalysis(contentAnalysis)
+
+	if err != nil {
+		return nil, errors.Wrap(err, "Error adding gender to people")
+	}
+
+	storeContentAnalysisInS3Error := services.StoreContentAnalysisInS3(contentAnalysisWithGender)
 
 	if storeContentAnalysisInS3Error != nil {
 		return nil, errors.Wrap(storeContentAnalysisInS3Error, "Could not store in S3")

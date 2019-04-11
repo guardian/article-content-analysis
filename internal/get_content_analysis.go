@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func ConstructContentAnalysis(path string, articleFields *models.ArticleFields, entities []*comprehend.Entity) *models.ContentAnalysis {
+func ConstructContentAnalysis(path string, articleFields *models.ArticleFields, entities []*comprehend.Entity, cacheHit bool) *models.ContentAnalysis {
 	byline := models.Byline{
 		Name: articleFields.Byline,
 	}
@@ -52,6 +52,7 @@ func ConstructContentAnalysis(path string, articleFields *models.ArticleFields, 
 		CreativeWorkTitles: creativeWorkTitles,
 		CommercialItems:    commercialItems,
 		Events:             events,
+		CacheHit:           cacheHit,
 	}
 
 	return &contentAnalysis
@@ -61,6 +62,7 @@ func GetContentAnalysis(path string, capiKey string) (*models.ContentAnalysis, e
 	contentAnalysis, err := services.GetContentAnalysisFromS3(path) //will return error if object is not in s3
 
 	if contentAnalysis != nil {
+		contentAnalysis.CacheHit = true
 		return contentAnalysis, nil
 	}
 
@@ -76,7 +78,7 @@ func GetContentAnalysis(path string, capiKey string) (*models.ContentAnalysis, e
 		return nil, errors.Wrap(err, "Couldn't get entities for given path")
 	}
 
-	contentAnalysis = ConstructContentAnalysis(path, articleFields, entities)
+	contentAnalysis = ConstructContentAnalysis(path, articleFields, entities, false)
 
 	storeContentAnalysisInS3Error := services.StoreContentAnalysisInS3(contentAnalysis)
 

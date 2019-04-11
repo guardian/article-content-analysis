@@ -37,4 +37,5 @@ type ContentAnalysis struct {
 	CreativeWorkTitles []*comprehend.Entity `json:"creativeWorkTitles"`
 	CommercialItems    []*comprehend.Entity `json:"commercialItems"`
 	Events             []*comprehend.Entity `json:"events"`
+	CacheHit           bool                 `json:"cacheHit"`
 }

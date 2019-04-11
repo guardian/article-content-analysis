@@ -6,6 +6,7 @@ import (
     "github.com/pkg/errors"
     "math"
     "sync"
+    "unicode"
 )
 
 func GetComprehendClient(profile string) (*comprehend.Comprehend, error) {
@@ -25,6 +26,10 @@ type ComprehendResult struct {
 
 const ComprehendMaxChars = 5000
 
+func IsLetter(char uint8) bool {
+    return unicode.IsLetter(rune(char))
+}
+
 func GetEntitiesFromBodyText(bodyText string) ([]*comprehend.Entity, error) {
     client, err := GetComprehendClient("developerPlayground")
 
@@ -43,10 +48,10 @@ func GetEntitiesFromBodyText(bodyText string) ([]*comprehend.Entity, error) {
         if end >= len(bodyText) {
             //final chunk
             end = len(bodyText)-1
-        } else if bodyText[end] != ' ' {
+        } else if IsLetter(bodyText[end]) {
             //Avoid splitting on a word
             for j := end - 1; j >= i; j-- {
-                if bodyText[j] == ' ' {
+                if !IsLetter(bodyText[j]) {
                     end = j
                     break
                 }

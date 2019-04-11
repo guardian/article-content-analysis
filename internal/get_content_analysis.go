@@ -7,9 +7,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-func ConstructContentAnalysis(path string, articleFields *models.ArticleFields, entities []*comprehend.Entity, cacheHit bool) *models.ContentAnalysis {
+func ConstructContentAnalysis(path string, content *models.Content, entities []*comprehend.Entity, cacheHit bool) *models.ContentAnalysis {
 	byline := models.Byline{
-		Name: articleFields.Byline,
+		Name: content.Fields.Byline,
 	}
 
 	var people []*models.Person = nil
@@ -43,8 +43,8 @@ func ConstructContentAnalysis(path string, articleFields *models.ArticleFields, 
 
 	contentAnalysis := models.ContentAnalysis{
 		Path:               path,
-		Headline:           articleFields.Headline,
-		BodyText:           articleFields.BodyText,
+		Headline:           content.Fields.Headline,
+		BodyText:           content.Fields.BodyText,
 		Bylines:            []*models.Byline{&byline},
 		People:             people,
 		Locations:          locations,

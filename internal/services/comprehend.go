@@ -40,18 +40,18 @@ func GetEntitiesFromBodyText(bodyText string) ([]*comprehend.Entity, error) {
     for i := 0; i < len(bodyText); {
         var end = i + ComprehendMaxChars-1
 
-		if end >= len(bodyText) {
-			//final chunk
-			end = len(bodyText)-1
-		} else if bodyText[end] != ' ' {
-			//Avoid splitting on a word
-			for j := end - 1; j >= i; j-- {
-				if bodyText[j] == ' ' {
-					end = j
-					break
-				}
-			}
-		}
+        if end >= len(bodyText) {
+            //final chunk
+            end = len(bodyText)-1
+        } else if bodyText[end] != ' ' {
+            //Avoid splitting on a word
+            for j := end - 1; j >= i; j-- {
+                if bodyText[j] == ' ' {
+                    end = j
+                    break
+                }
+            }
+        }
 
         var chunk = bodyText[i:end]
 

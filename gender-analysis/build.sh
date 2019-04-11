@@ -7,7 +7,7 @@ export NVM_DIR="$HOME/.nvm"
 
 nvm use ${NODE_VERSION}
 
-pushd article-content-analysis
+pushd gender-analysis
 
 npm install
 npm run riffraff-artefact

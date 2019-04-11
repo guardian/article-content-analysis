@@ -25,6 +25,7 @@ func TestStoreContentAnalysisInS3(t *testing.T) {
 		"/commentisfree/2019/apr/08/wall-street-socialism-jpmorgan-jamie-dimon-bailout",
 		&articleFields,
 		events,
+		false,
 	)
 
 	err := services.StoreContentAnalysisInS3(contentAnalysis)

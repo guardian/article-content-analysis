@@ -6,7 +6,7 @@ import (
 )
 
 func TestGetEntitiesFromPath(t *testing.T) {
-	res, err := GetEntitiesFromPath("/commentisfree/2019/apr/08/workers-rights-survive-brexit-labour-demand-more")
+	res, err := GetEntitiesFromPath("/artanddesign/2019/feb/21/from-hepworth-to-rodin-uk-sculpture-collection-to-be-catalogued-online")
 
 	if err != nil {
 		t.Error(err)

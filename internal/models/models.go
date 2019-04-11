@@ -24,7 +24,14 @@ type Content struct {
 	WebPublicationDate string        `json:"webPublicationDate"`
 	Section            string        `json:"sectionId"`
 	Fields             ContentFields `json:"fields"`
+	Id                 string        `json:"id"`
 }
+
+type CapiSearchResponse struct {
+	Status  string
+	Results []Content
+}
+
 type Gender string
 
 type Byline struct {

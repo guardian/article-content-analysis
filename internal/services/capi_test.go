@@ -19,3 +19,17 @@ func TestGetArticleFieldsFromCapi(t *testing.T) {
 		}
 	}
 }
+
+func TestGetArticleFieldsFromCapiForDateRange(t *testing.T) {
+	res, err := GetArticleFieldsFromCapiForDateRange("2018-01-02", "2018-01-02", "test")
+	if err != nil {
+		t.Error(err)
+	} else {
+		res, err := json.Marshal(res)
+		if err != nil {
+			t.Error(err)
+		} else {
+			fmt.Println(string(res))
+		}
+	}
+}

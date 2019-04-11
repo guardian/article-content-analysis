@@ -3,6 +3,7 @@ package internal
 import (
 	"article-content-analysis/internal/models"
 	"article-content-analysis/internal/services"
+	"fmt"
 	"github.com/aws/aws-sdk-go/service/comprehend"
 	"github.com/pkg/errors"
 )
@@ -99,7 +100,7 @@ func AddGenderToContentAnalysis(contentAnalysis *models.ContentAnalysis) (*model
 
 }
 
-func GetContentAnalysis(path string, capiKey string) (*models.ContentAnalysis, error) {
+func GetContentAnalysisForPath(path string, capiKey string) (*models.ContentAnalysis, error) {
 	contentAnalysis, err := services.GetContentAnalysisFromS3(path) //will return error if object is not in s3
 
 	if contentAnalysis != nil {
@@ -134,4 +135,28 @@ func GetContentAnalysis(path string, capiKey string) (*models.ContentAnalysis, e
 	}
 
 	return contentAnalysis, nil
+}
+
+func GetContentAnalysisForDateRange(fromDate string, endDate string, apiKey string) ([]*models.ContentAnalysis, error) {
+	articlesInRange, err := services.GetArticleFieldsFromCapiForDateRange(fromDate, endDate, apiKey)
+
+	if err != nil {
+		return nil, errors.Wrap(err, "Could not get articles from CAPI")
+	}
+
+	var results []*models.ContentAnalysis = nil
+
+	for _, article := range articlesInRange.Results {
+		analysis, err := GetContentAnalysisForPath(article.Id, apiKey)
+
+		if err != nil {
+			fmt.Println("did not work for article " + article.Id)
+		} else {
+			fmt.Println("worked for article " + article.Id)
+			results = append(results, analysis)
+		}
+	}
+
+	return results, nil
+
 }

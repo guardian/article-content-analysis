@@ -22,7 +22,7 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 	if requestBodyError != nil {
 		return res, errors.Wrap(requestBodyError, "Could not parse json body")
 	}
-	contentAnalysis, err := internal.GetContentAnalysis(input.Path, input.CapiKey)
+	contentAnalysis, err := internal.GetContentAnalysisForPath(input.Path, input.CapiKey)
 	if err != nil {
 		return res, errors.Wrap(err, "Did not manage to get entities for path")
 	}

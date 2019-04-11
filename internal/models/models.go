@@ -44,6 +44,7 @@ type Person struct {
 	Gender Gender
 }
 
+//Note - entity offsets may not be accurate for articles longer than 5000 chars
 type ContentAnalysis struct {
 	Path               string               `json:"path"`
 	Headline           string               `json:"headline"`

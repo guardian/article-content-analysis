@@ -119,7 +119,7 @@ func GetContentAnalysisForPath(path string, capiKey string) (*models.ContentAnal
 		return nil, errors.Wrap(err, "Couldn't get article fields from CAPI for given path")
 	}
 
-	entities, err := services.GetEntitiesFromPath(path)
+	entities, err := services.GetEntitiesFromPath(path, articleFields)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "Couldn't get entities for given path")

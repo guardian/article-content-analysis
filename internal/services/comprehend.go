@@ -1,6 +1,7 @@
 package services
 
 import (
+    "article-content-analysis/internal/models"
     "fmt"
     "github.com/aws/aws-sdk-go/service/comprehend"
     "github.com/pkg/errors"
@@ -90,12 +91,7 @@ func GetEntitiesFromBodyText(bodyText string) ([]*comprehend.Entity, error) {
     return results, nil
 }
 
-func GetEntitiesFromPath(path string) ([]*comprehend.Entity, error) {
-    articleFields, err := GetArticleFieldsFromCapi(path, "test")
-    if err != nil {
-        return nil, errors.Wrap(err, "Couldn't get article fields from CAPI for given path")
-    }
-
+func GetEntitiesFromPath(path string, articleFields *models.Content) ([]*comprehend.Entity, error) {
     entities, err := GetEntitiesFromBodyText(articleFields.Fields.BodyText)
 
     if err != nil {

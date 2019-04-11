@@ -37,12 +37,11 @@ func GetEntitiesFromPath(path string) ([]*comprehend.Entity, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "Couldn't get article fields from CAPI for given path")
 	}
-
-	var bodyText = articleFields.BodyText
+	var bodyText = articleFields.Fields.BodyText
 
 	// hack to stop it failing on long articles
-	if len(articleFields.BodyText) > 4999 {
-		bodyText = articleFields.BodyText[0:4999]
+	if len(bodyText) > 4999 {
+		bodyText = articleFields.Fields.BodyText[0:4999]
 	}
 	entities, err := GetEntitiesFromBodyText(bodyText)
 

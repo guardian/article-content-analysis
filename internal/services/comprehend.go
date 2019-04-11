@@ -1,94 +1,89 @@
 package services
 
 import (
-	"fmt"
-	"github.com/aws/aws-sdk-go/service/comprehend"
-	"github.com/pkg/errors"
-	"math"
-	"sync"
+    "fmt"
+    "github.com/aws/aws-sdk-go/service/comprehend"
+    "github.com/pkg/errors"
+    "math"
+    "sync"
 )
 
 func GetComprehendClient(profile string) (*comprehend.Comprehend, error) {
-	sess, err := GetAwsSession(profile, "eu-west-1")
+    sess, err := GetAwsSession(profile, "eu-west-1")
 
-	if err != nil {
-		return nil, errors.Wrap(err, "unable to create new sessions")
-	}
+    if err != nil {
+        return nil, errors.Wrap(err, "unable to create new sessions")
+    }
 
-	return comprehend.New(sess), nil
+    return comprehend.New(sess), nil
 }
 
 type ComprehendResult struct {
-	Result *comprehend.DetectEntitiesOutput
-	Error error
+    Result *comprehend.DetectEntitiesOutput
+    Error error
 }
 
 const ComprehendMaxChars = 5000
 
 func GetEntitiesFromBodyText(bodyText string) ([]*comprehend.Entity, error) {
-	client, err := GetComprehendClient("developerPlayground")
+    client, err := GetComprehendClient("developerPlayground")
 
-	if err != nil {
-		return nil, errors.Wrap(err, "couldn't create client")
-	}
+    if err != nil {
+        return nil, errors.Wrap(err, "couldn't create client")
+    }
 
-	// Use a separate goroutine to request each chunk, and wait for each to write to the channel
-	comprehendResults := make(chan ComprehendResult)
-	var wg sync.WaitGroup
-	wg.Add(int(math.Ceil( float64(len(bodyText)) / float64(ComprehendMaxChars) )))
+    // Use a separate goroutine to request each chunk, and wait for each to write to the channel
+    comprehendResults := make(chan ComprehendResult)
+    var wg sync.WaitGroup
+    wg.Add(int(math.Ceil( float64(len(bodyText)) / float64(ComprehendMaxChars) )))
 
-	for i := 0; i < len(bodyText); i += ComprehendMaxChars {
-		//TODO - avoiding splitting on words
-		var end = i + ComprehendMaxChars-1
-		if end >= len(bodyText) {
-			end = len(bodyText)-1
-		}
-		var chunk = bodyText[i:end]
+    for i := 0; i < len(bodyText); i += ComprehendMaxChars {
+        //TODO - avoiding splitting on words
+        var end = i + ComprehendMaxChars-1
+        if end >= len(bodyText) {
+            end = len(bodyText)-1
+        }
+        var chunk = bodyText[i:end]
 
-		go func(text string) {
-			defer wg.Done()
+        go func(text string) {
+            defer wg.Done()
 
-			input := &comprehend.DetectEntitiesInput{}
-			input.SetText(text)
-			input.SetLanguageCode("en")
-			result, err := client.DetectEntities(input)
-			if err != nil {
-				fmt.Println("Comprehend request error", err)
-			}
+            input := &comprehend.DetectEntitiesInput{}
+            input.SetText(text)
+            input.SetLanguageCode("en")
+            result, err := client.DetectEntities(input)
+            if err != nil {
+                fmt.Println("Comprehend request error", err)
+            }
 
-			comprehendResults <- ComprehendResult{result, err}
-		}(chunk)
-	}
+            comprehendResults <- ComprehendResult{result, err}
+        }(chunk)
+    }
 
-	go func() {
-		wg.Wait()
-		close(comprehendResults)
-	}()
+    go func() {
+        wg.Wait()
+        close(comprehendResults)
+    }()
 
-	results := make([]*comprehend.Entity, 0)
-	for response := range comprehendResults {
-		results = append(results, response.Result.Entities...)
-	}
+    results := make([]*comprehend.Entity, 0)
+    for response := range comprehendResults {
+        results = append(results, response.Result.Entities...)
+    }
 
-	return results, nil
+    return results, nil
 }
 
 func GetEntitiesFromPath(path string) ([]*comprehend.Entity, error) {
-	articleFields, err := GetArticleFieldsFromCapi(path, "test")
-	if err != nil {
-		return nil, errors.Wrap(err, "Couldn't get article fields from CAPI for given path")
-	}
-	var bodyText = articleFields.Fields.BodyText
+    articleFields, err := GetArticleFieldsFromCapi(path, "test")
+    if err != nil {
+        return nil, errors.Wrap(err, "Couldn't get article fields from CAPI for given path")
+    }
 
-	// hack to stop it failing on long articles
-	if len(bodyText) > 4999 {
-		bodyText = articleFields.Fields.BodyText[0:4999]
-	}
-	entities, err := GetEntitiesFromBodyText(bodyText)
+    entities, err := GetEntitiesFromBodyText(articleFields.Fields.BodyText)
 
-	if err != nil {
-		return nil, errors.Wrap(err, "Error retrieving entities from body text")
-	}
+    if err != nil {
+        return nil, errors.Wrap(err, "Error retrieving entities from body text")
+    }
 
-	return entities, nil
+    return entities, nil
 }

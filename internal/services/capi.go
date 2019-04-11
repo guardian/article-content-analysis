@@ -36,6 +36,7 @@ func GetArticleFieldsFromCapi(path string, apiKey string) (*models.Content, erro
 	}
 
 	articleFields.WebPublicationDate, err = utils.FormatDate(articleFields.WebPublicationDate)
+
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to format date")
 	}

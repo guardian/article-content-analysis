@@ -6,11 +6,16 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/service/comprehend"
 	"github.com/pkg/errors"
+	"strings"
 )
 
 func ConstructContentAnalysis(path string, content *models.Content, entities []*comprehend.Entity, cacheHit bool) *models.ContentAnalysis {
-	byline := models.Byline{
-		Name: content.Fields.Byline,
+	var bylines []*models.Byline = nil
+
+	bylinesArray := strings.Split(strings.Replace(content.Fields.Byline, " and ", ",", -1), ",")
+
+	for _, byline := range bylinesArray {
+		bylines = append(bylines, &models.Byline{byline, ""})
 	}
 
 	var people []*models.Person = nil
@@ -46,7 +51,7 @@ func ConstructContentAnalysis(path string, content *models.Content, entities []*
 		Path:               path,
 		Headline:           content.Fields.Headline,
 		BodyText:           content.Fields.BodyText,
-		Bylines:            []*models.Byline{&byline},
+		Bylines:            bylines,
 		People:             people,
 		Locations:          locations,
 		Organisations:      organisations,

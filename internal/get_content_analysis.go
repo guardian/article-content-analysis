@@ -53,6 +53,8 @@ func ConstructContentAnalysis(path string, content *models.Content, entities []*
 		CommercialItems:    commercialItems,
 		Events:             events,
 		CacheHit:           cacheHit,
+		Section:            content.Section,
+		WebPublicationDate: content.WebPublicationDate,
 	}
 
 	return &contentAnalysis

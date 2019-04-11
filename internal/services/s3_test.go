@@ -19,12 +19,14 @@ func TestGetContentAnalysisFromS3(t *testing.T) {
 }
 
 func TestStoreContentAnalysisInS3(t *testing.T) {
-	articleFields := models.ArticleFields{"test_headline", "test_byline", "test_body"}
+	contentFields := models.ContentFields{"test_headline", "test_byline", "test_body"}
+	content := models.Content{ "2019-01-01", "football", contentFields}
 	var events []*comprehend.Entity = nil
 	contentAnalysis := internal.ConstructContentAnalysis(
 		"/commentisfree/2019/apr/08/wall-street-socialism-jpmorgan-jamie-dimon-bailout",
-		&articleFields,
+		&content,
 		events,
+		false,
 	)
 
 	err := services.StoreContentAnalysisInS3(contentAnalysis)

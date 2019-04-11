@@ -9,8 +9,8 @@ import (
 	"net/http"
 )
 
-func GetArticleFieldsFromCapi(path string, apiKey string) (*models.ArticleFields, error) {
-	var articleFields = new(models.ArticleFields)
+func GetArticleFieldsFromCapi(path string, apiKey string) (*models.Content, error) {
+	var articleFields = new(models.Content)
 	urlPrefix := "https://content.guardianapis.com"
 	urlSuffix := "?api-key=" + apiKey + "&show-fields=byline,bodyText,headline"
 	url := urlPrefix + path + urlSuffix
@@ -25,7 +25,7 @@ func GetArticleFieldsFromCapi(path string, apiKey string) (*models.ArticleFields
 	}
 
 	//TODO: validate response
-	fields := gjson.Get(string(body), "response.content.fields").Raw
+	fields := gjson.Get(string(body), "response.content").Raw
 	fieldsBytes := []byte(fields)
 	articleFieldsError := json.Unmarshal(fieldsBytes, &articleFields)
 	if articleFieldsError != nil {

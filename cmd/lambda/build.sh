@@ -40,14 +40,14 @@ docker run --rm \
     bash -c "go build ${PROJ_DIR}/main.go"
 
 # Output of docker run command will be an executable file named main. Zip it.
-ZIP_FILE=article-content-analysis.zip
+ZIP_FILE=gender-analysis.zip
 zip ${ZIP_FILE} main
 
 LAMBDA_DIR=packages/article-content-analysis
 mkdir -p ${LAMBDA_DIR}
 cp ${ZIP_FILE} ${LAMBDA_DIR}
 
-PROJECT_NAME=article-content-analysis
+PROJECT_NAME=gender-analysis
 BUILD_NUMBER=${BUILD_NUMBER=DEV}
 BUILD_NAME=article-content-analysis-build.${BUILD_NUMBER}
 BUILD_START_DATE=$(date +"%Y-%m-%dT%H:%M:%S.000Z")

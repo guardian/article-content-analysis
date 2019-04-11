@@ -8,6 +8,18 @@ type ArticleFields struct {
 	BodyText string `json:"bodyText"`
 }
 
+type GenderAnalysis struct {
+	People []struct {
+		Text        string `json:"text"`
+		Normal      string `json:"normal	"`
+		FirstName   string `json:"firstName"`
+		MiddleName  string `json:"middleName"`
+		NickName    string `json:"nickName"`
+		LastName    string `json:"lastName"`
+		GenderGuess string `json:"genderGuess"`
+		Pronoun     string `json:"pronoun"`
+	} `json:"people"`
+}
 type Gender int
 
 const (

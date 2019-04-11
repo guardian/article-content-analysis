@@ -70,10 +70,10 @@ func AddGenderToContentAnalysis(contentAnalysis *models.ContentAnalysis) (*model
 
 		if len(genderAnalysis.People) > 0 {
 			if genderAnalysis.People[0].GenderGuess == "Female" {
-				person.Gender = 1
+				person.Gender = "Female"
 			}
 			if genderAnalysis.People[0].GenderGuess == "Male" {
-				person.Gender = 2
+				person.Gender = "Male"
 			}
 		}
 	}
@@ -87,10 +87,10 @@ func AddGenderToContentAnalysis(contentAnalysis *models.ContentAnalysis) (*model
 
 		if len(genderAnalysis.People) > 0 {
 			if genderAnalysis.People[0].GenderGuess == "Female" {
-				person.Gender = 1
+				person.Gender = "Female"
 			}
 			if genderAnalysis.People[0].GenderGuess == "Male" {
-				person.Gender = 2
+				person.Gender = "Male"
 			}
 		}
 	}

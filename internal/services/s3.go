@@ -43,6 +43,7 @@ func GetContentAnalysisFromS3(path string) (*models.ContentAnalysis, error) {
 
 func StoreContentAnalysisInS3(contentAnalysis *models.ContentAnalysis) error {
 	sess, err := GetAwsSession("developerPlayground", "eu-west-1")
+
 	uploader := s3manager.NewUploader(sess)
 
 	marshalled, err := json.Marshal(contentAnalysis)

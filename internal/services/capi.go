@@ -2,6 +2,7 @@ package services
 
 import (
 	"article-content-analysis/internal/models"
+	"article-content-analysis/internal/utils"
 	"encoding/json"
 	"fmt"
 	"github.com/pkg/errors"
@@ -33,6 +34,12 @@ func GetArticleFieldsFromCapi(path string, apiKey string) (*models.Content, erro
 	if articleFieldsError != nil {
 		return nil, errors.Wrap(articleFieldsError, "could not parse response from CAPI")
 	}
+
+	articleFields.WebPublicationDate, err = utils.FormatDate(articleFields.WebPublicationDate)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to format date")
+	}
+
 	return articleFields, nil
 }
 

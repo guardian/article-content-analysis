@@ -31,6 +31,7 @@ func IsLetter(char uint8) bool {
     return unicode.IsLetter(rune(char))
 }
 
+//TODO - this function could be simpler if the aws sdk allows us to asynchronously process text in chunks?
 func GetEntitiesFromBodyText(bodyText string) ([]*comprehend.Entity, error) {
     client, err := GetComprehendClient("developerPlayground")
 
